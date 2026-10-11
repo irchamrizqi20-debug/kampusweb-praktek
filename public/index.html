@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PlayTube Klasik</title>
+<style>
+:root{--blue:#1c62b9;--blue2:#0b4c9c;--bg:#f1f1f1;--line:#d5d5d5;--text:#222;--muted:#666}
+*{box-sizing:border-box}body{margin:0;font:14px Arial,Helvetica,sans-serif;color:var(--text);background:var(--bg)}
+button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}
+header{height:58px;background:#fff;border-bottom:1px solid #ccc;display:flex;align-items:center;gap:18px;padding:0 max(14px,calc((100vw - 1320px)/2));position:sticky;top:0;z-index:8}
+.logo{display:flex;align-items:center;gap:7px;min-width:180px;font-size:20px;font-weight:bold;color:#333}.logo-mark{background:#d92121;color:white;border-radius:4px;padding:4px 7px;font-size:16px}
+.search{display:flex;max-width:600px;flex:1}.search input{min-width:0;flex:1;padding:9px 12px;border:1px solid #aaa;box-shadow:inset 0 1px 2px #ddd}.search button{padding:0 22px;border:1px solid #aaa;background:#f6f6f6}.header-actions{margin-left:auto;display:flex;gap:8px;align-items:center;white-space:nowrap}.btn{border:1px solid #aaa;background:linear-gradient(#fff,#eee);padding:8px 12px;border-radius:2px;color:#333}.btn.primary{background:linear-gradient(#3d83d7,#1c62b9);color:#fff;border-color:#174f94}.btn.danger{color:#a00}.btn:disabled{opacity:.5;cursor:not-allowed}
+.layout{max-width:1320px;margin:auto;display:grid;grid-template-columns:190px minmax(0,1fr);gap:18px;padding:18px 14px}
+aside{background:#fff;border:1px solid var(--line);align-self:start}.side-title{padding:12px 14px;font-weight:bold;border-bottom:1px solid #ddd;background:#f8f8f8}.side-link{display:block;padding:11px 14px;border-bottom:1px solid #eee}.side-link:hover,.side-link.active{background:#e6effa;color:#164f91}
+main{min-width:0}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #ccc;margin-bottom:15px;padding:0 0 12px}.toolbar h1{font-size:20px;margin:0}.filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}.filter{border:1px solid #bbb;background:#fff;padding:7px 11px}.filter.active{background:#2868b2;color:#fff;border-color:#1a579d}
+.video-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px 14px}.video-card{background:#fff;border:1px solid #ddd;padding:7px;cursor:pointer;min-width:0}.video-card:hover{border-color:#7c9ec9}.thumb{width:100%;aspect-ratio:16/9;object-fit:cover;background:#ddd;display:block}.video-title{font-size:14px;line-height:1.35;margin:8px 0 5px;font-weight:bold}.meta{font-size:12px;color:#666;line-height:1.5}.category-tag{display:inline-block;background:#eee;color:#555;padding:2px 5px;margin-top:5px;font-size:11px}
+.panel{background:#fff;border:1px solid #d1d1d1;padding:16px;margin-bottom:15px}.panel h2{font-size:18px;margin:0 0 13px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}.field input,.field textarea,.field select{width:100%;padding:9px;border:1px solid #aaa;background:white}.field textarea{min-height:85px;resize:vertical}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.notice{padding:10px;background:#e8f2ff;border:1px solid #bad1ef;margin-bottom:12px}.hidden{display:none!important}.video-detail{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(230px,1fr);gap:18px}.video-stage{background:#000;aspect-ratio:16/9}.video-stage video{width:100%;height:100%;display:block}.detail-title{font-size:21px;margin:12px 0}.detail-actions{display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid #ddd;padding-bottom:12px}.comment{padding:12px 0;border-bottom:1px solid #eee}.comment strong{display:block;margin-bottom:5px}.comment small{color:#777}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{padding:16px;background:#f4f7fb;border:1px solid #cbd8e8}.stat b{display:block;font-size:25px;color:#1c62b9;margin-top:6px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;background:#fff}th,td{text-align:left;padding:9px;border:1px solid #ddd;vertical-align:top}th{background:#eee}.live-label{background:#d31f26;color:#fff;padding:3px 6px;font-size:11px;font-weight:bold}
+footer{text-align:center;color:#777;font-size:12px;padding:20px}.empty{padding:40px;text-align:center;background:white;border:1px solid #ddd;color:#666}
+@media(max-width:1100px){.video-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.logo{min-width:145px}.layout{grid-template-columns:165px minmax(0,1fr)}}
+@media(max-width:780px){header{gap:8px;padding:0 9px}.logo{min-width:auto;font-size:0}.logo-mark{font-size:14px}.search button{padding:0 12px}.header-actions .optional{display:none}.layout{display:block;padding:10px}.layout aside{display:flex;overflow:auto;margin-bottom:12px}.side-title{display:none}.side-link{white-space:nowrap;border-right:1px solid #eee;border-bottom:0;padding:10px}.video-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.video-detail{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.toolbar{align-items:flex-start;flex-direction:column}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
+@media(max-width:420px){.video-grid{grid-template-columns:1fr}.header-actions .btn{padding:7px}.search input{width:80px}}
+</style>
+</head>
+<body>
+<header>
+ <a class="logo" href="#" onclick="showPage('home');return false"><span class="logo-mark">▶ PT</span><span>PlayTube</span></a>
+ <form id="searchForm" class="search"><input id="searchInput" placeholder="Cari video..." aria-label="Cari video"><button>🔍</button></form>
+ <div class="header-actions"><button class="btn optional" onclick="showPage('upload')">⬆ Upload</button><span id="userSlot"></span></div>
+</header>
+<div class="layout">
+ <aside>
+  <div class="side-title">MENU</div>
+  <a class="side-link active" href="#" data-page="home">⌂ Beranda</a>
+  <a class="side-link" href="#" data-page="live">🔴 Live streaming</a>
+  <a class="side-link" href="#" data-page="upload">⬆ Upload video</a>
+  <a class="side-link" href="#" data-page="history">◷ Riwayat tontonan</a>
+  <a class="side-link" href="#" data-page="playlists">☷ Playlist saya</a>
+  <a class="side-link" href="#" data-page="admin" id="adminLink" hidden>⚙ Dashboard admin</a>
+ </aside>
+ <main>
+  <section id="page-home">
+   <div class="toolbar"><h1>Video terbaru</h1><span class="meta" id="videoCount"></span></div>
+   <div class="filters" id="filters"><button class="filter active" data-cat="Semua">Semua</button><button class="filter" data-cat="Musik">Musik</button><button class="filter" data-cat="Gaming">Gaming</button><button class="filter" data-cat="Edukasi">Edukasi</button><button class="filter" data-cat="Teknologi">Teknologi</button><button class="filter" data-cat="Komedi">Komedi</button><button class="filter" data-cat="Lainnya">Lainnya</button></div>
+   <div class="video-grid" id="videoGrid"></div>
+  </section>
+  <section id="page-watch" class="hidden"></section>
+  <section id="page-upload" class="hidden">
+   <div class="toolbar"><h1>Upload video</h1></div>
+   <div class="panel"><div class="notice">Format video: MP4, WebM, OGG, atau MOV. Batas ukuran file 500 MB. File disimpan di folder uploads dan metadata disimpan dalam database SQLite.</div>
+    <form id="uploadForm" class="form-grid">
+     <label class="field"><span>Judul video *</span><input name="title" required maxlength="120"></label>
+     <label class="field"><span>Kategori</span><select name="category"><option>Gaming</option><option>Musik</option><option>Edukasi</option><option>Teknologi</option><option>Komedi</option><option>Olahraga</option><option>Animasi</option><option>Lainnya</option></select></label>
+     <label class="field full"><span>Deskripsi</span><textarea name="description" maxlength="5000"></textarea></label>
+     <label class="field full"><span>File video *</span><input type="file" name="video" accept="video/mp4,video/webm,video/ogg,video/quicktime" required></label>
+     <div class="field full row"><button class="btn primary">Upload video</button><span id="uploadStatus" class="meta"></span></div>
+    </form>
+   </div>
+  </section>
+  <section id="page-history" class="hidden"><div class="toolbar"><h1>Riwayat tontonan</h1></div><div class="video-grid" id="historyGrid"></div></section>
+  <section id="page-playlists" class="hidden"><div class="toolbar"><h1>Playlist saya</h1></div>
+   <div class="panel"><form id="playlistForm" class="row"><input name="name" placeholder="Nama playlist baru" maxlength="80" required style="padding:9px;border:1px solid #aaa;flex:1;min-width:150px"><button class="btn primary">Buat playlist</button></form></div><div id="playlistList"></div>
+  </section>
+  <section id="page-live" class="hidden"><div class="toolbar"><h1>Live streaming</h1><span class="meta">Kamera + WebRTC</span></div>
+   <div class="panel"><h2>Mulai siaran langsung</h2><form id="liveForm" class="row"><input name="title" placeholder="Judul live streaming" maxlength="120" required style="padding:9px;border:1px solid #aaa;flex:1;min-width:180px"><button class="btn primary">Mulai live</button></form><p class="meta">Izinkan akses kamera dan mikrofon ketika browser memintanya. Untuk penonton dari perangkat lain, gunakan HTTPS dan konfigurasi STUN/TURN jika jaringan memerlukannya.</p><div id="broadcasterBox" class="hidden"><video id="localVideo" autoplay muted playsinline style="width:min(650px,100%);background:#000;margin-top:12px"></video><p id="liveStatus" class="meta"></p><button class="btn danger" id="stopLive">Akhiri siaran</button></div></div>
+   <div class="toolbar"><h2>Siaran yang sedang live</h2><button class="btn" id="refreshStreams">Muat ulang</button></div><div id="streamList"></div><div id="viewerBox" class="panel hidden"><h2 id="viewerTitle"></h2><video id="remoteVideo" autoplay playsinline controls style="width:min(800px,100%);background:#000"></video><p id="viewerStatus" class="meta"></p></div>
+  </section>
+  <section id="page-admin" class="hidden"><div class="toolbar"><h1>Dashboard admin</h1><button class="btn" id="refreshAdmin">Muat ulang</button></div><div id="adminContent"></div></section>
+ </main>
+</div>
+<footer>PlayTube Klasik • Proyek contoh full-stack • Hormati hak cipta saat mengunggah video.</footer>
+<div id="authOverlay" class="hidden" style="position:fixed;inset:0;background:#0008;z-index:20;display:none;align-items:center;justify-content:center;padding:16px">
+ <div class="panel" style="width:min(430px,100%);box-shadow:0 8px 35px #0005"><div class="row" style="justify-content:space-between"><h2 id="authTitle">Login</h2><button class="btn" id="closeAuth">✕</button></div>
+  <div class="filters"><button class="filter active" id="loginTab">Login</button><button class="filter" id="registerTab">Registrasi</button></div>
+  <form id="authForm" class="form-grid"><label class="field full"><span>Username</span><input name="username" required minlength="3" maxlength="24" autocomplete="username"></label><label class="field full"><span>Password</span><input name="password" type="password" required minlength="8" autocomplete="current-password"></label><div class="field full row"><button class="btn primary" id="authSubmit">Login</button><span id="authError" class="meta"></span></div></form>
+  <p class="meta">Akun dibuat untuk situs ini saja. Jangan gunakan password penting milikmu.</p>
+ </div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let me=null, category='Semua', currentVideo=null, authMode='login', streams=[], activeStreamId=null, localStream=null, socket=null, peerConnections=new Map(), viewerPeer=null;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function api(url,opts={}) {
+ const res=await fetch(url,{credentials:'same-origin',...opts});
+ const type=res.headers.get('content-type')||'';
+ const data=type.includes('application/json')?await res.json():{};
+ if(!res.ok) throw new Error(data.error||`Permintaan gagal (${res.status})`);
+ return data;
+}
+function authHeaders(){return {}}
+function notice(msg){alert(msg)}
+function showAuth(mode='login'){authMode=mode;$('#authTitle').textContent=mode==='login'?'Login':'Registrasi';$('#authSubmit').textContent=mode==='login'?'Login':'Buat akun';$('#loginTab').classList.toggle('active',mode==='login');$('#registerTab').classList.toggle('active',mode==='register');$('#authError').textContent='';$('#authOverlay').classList.remove('hidden');$('#authOverlay').style.display='flex'}
+function closeAuth(){$('#authOverlay').style.display='none';$('#authOverlay').classList.add('hidden')}
+function requireLogin(){if(!me){showAuth();return false}return true}
+function updateUser(){
+ $('#userSlot').innerHTML=me?`<span style="margin-right:7px">👤 ${esc(me.username)}</span><button class="btn" id="logoutBtn">Keluar</button>`:`<button class="btn primary" id="loginBtn">Login</button>`;
+ $('#loginBtn')?.addEventListener('click',()=>showAuth());
+ $('#logoutBtn')?.addEventListener('click',async()=>{await api('/api/logout',{method:'POST'});me=null;updateUser();showPage('home');loadVideos()});
+ $('#adminLink').hidden=!(me&&me.role==='admin');
+}
+function showPage(name){
+ if(name!=='live' && localStream) stopLocalStream(true);
+ $$('#page-home,#page-watch,#page-upload,#page-history,#page-playlists,#page-live,#page-admin').forEach(el=>el.classList.add('hidden'));
+ const section=$('#page-'+name);if(section)section.classList.remove('hidden');
+ $$('.side-link').forEach(a=>a.classList.toggle('active',a.dataset.page===name));
+ if(name==='home')loadVideos();if(name==='history')loadHistory();if(name==='playlists')loadPlaylists();if(name==='live')loadStreams();if(name==='admin')loadAdmin();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+$$('[data-page]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const p=a.dataset.page;if(['upload','history','playlists','live'].includes(p)&&!requireLogin())return;if(p==='admin'&&(!me||me.role!=='admin'))return showAuth();showPage(p)}));
+function card(v){return `<article class="video-card" onclick="watchVideo(${Number(v.id)})"><img class="thumb" src="${esc(v.url)}" alt="" loading="lazy"><div class="video-title">${esc(v.title)}</div><div class="meta">${esc(v.username)}<br>${Number(v.views).toLocaleString('id-ID')} tayangan · ${Number(v.likes)} suka</div><span class="category-tag">${esc(v.category)}</span></article>`}
+function renderGrid(el,items){el.innerHTML=items.length?items.map(card).join(''):'<div class="empty" style="grid-column:1/-1">Belum ada video di sini.</div>'}
+async function loadVideos(){try{const q=$('#searchInput').value.trim();const items=await api('/api/videos?q='+encodeURIComponent(q)+'&category='+encodeURIComponent(category));renderGrid($('#videoGrid'),items);$('#videoCount').textContent=`${items.length} video`}catch(e){$('#videoGrid').innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
+$('#searchForm').addEventListener('submit',e=>{e.preventDefault();showPage('home');loadVideos()});
+$('#searchInput').addEventListener('input',()=>{if(!$('#page-home').classList.contains('hidden'))loadVideos()});
+$('#filters').addEventListener('click',e=>{const b=e.target.closest('[data-cat]');if(!b)return;category=b.dataset.cat;$$('.filter').forEach(x=>x.classList.toggle('active',x===b));loadVideos()});
+async function watchVideo(id){
+ try{
+  currentVideo=id;const data=await api('/api/videos/'+id);const v=data.video;
+  $('#page-home').classList.add('hidden');$$('#page-watch').forEach(x=>x.classList.remove('hidden'));
+  $('#page-watch').innerHTML=`<div class="toolbar"><button class="btn" onclick="showPage('home')">← Kembali</button><span class="meta">${esc(v.category)}</span></div><div class="video-detail"><div><div class="video-stage"><video src="${esc(v.url)}" controls autoplay playsinline></video></div><h1 class="detail-title">${esc(v.title)}</h1><div class="meta">${esc(v.username)} · ${Number(v.views).toLocaleString('id-ID')} tayangan · ${Number(v.likes)} suka</div><div class="detail-actions" style="margin-top:12px"><button class="btn" id="likeBtn">${v.liked?'♥ Disukai':'♡ Like'} (${v.likes})</button><button class="btn" id="addPlaylistBtn">＋ Tambah ke playlist</button></div><div class="panel" style="margin-top:12px"><b>Deskripsi</b><p>${esc(v.description||'Tidak ada deskripsi.')}</p></div><div class="panel"><h2>Komentar (${data.comments.length})</h2><form id="commentForm" class="row"><input name="body" maxlength="1000" required placeholder="Tulis komentar..." style="flex:1;min-width:150px;padding:9px;border:1px solid #aaa"><button class="btn primary">Kirim</button></form><div id="commentsList">${data.comments.map(commentHtml).join('')||'<p class="meta">Belum ada komentar.</p>'}</div></div></div><aside class="panel"><h2>Video</h2><p class="meta">Video diunggah ke PlayTube oleh komunitas.</p><button class="btn" onclick="showPage('home')">Lihat video lainnya</button></aside></div>`;
+  $('#likeBtn').addEventListener('click',async()=>{if(!requireLogin())return;try{const r=await api(`/api/videos/${id}/like`,{method:'POST'});$('#likeBtn').textContent=`${r.liked?'♥ Disukai':'♡ Like'} (${r.likes})`;loadVideos()}catch(e){notice(e.message)}});
+  $('#addPlaylistBtn').addEventListener('click',()=>addVideoToPlaylist(id));
+  $('#commentForm').addEventListener('submit',async e=>{e.preventDefault();if(!requireLogin())return;const body=new FormData(e.target).get('body');try{const c=await api(`/api/videos/${id}/comments`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({body})});$('#commentsList').insertAdjacentHTML('afterbegin',commentHtml(c));e.target.reset()}catch(err){notice(err.message)}});
+ }catch(e){notice(e.message)}
+}
+function commentHtml(c){return `<div class="comment"><strong>${esc(c.username)} <small>· ${esc(c.created_at)}</small></strong><div>${esc(c.body)}</div></div>`}
+async function addVideoToPlaylist(videoId){
+ if(!requireLogin())return;
+ try{const lists=await api('/api/playlists');if(!lists.length){const name=prompt('Belum ada playlist. Masukkan nama playlist baru:');if(!name)return;await api('/api/playlists',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name})})}
+ const updated=await api('/api/playlists');const choice=prompt('Pilih ID playlist:\n'+updated.map(p=>`${p.id} — ${p.name}`).join('\n'));if(!choice)return;
+ await api(`/api/playlists/${Number(choice)}/videos`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({videoId})});notice('Video ditambahkan ke playlist.');
+ }catch(e){notice(e.message)}
+}
+$('#uploadForm').addEventListener('submit',async e=>{e.preventDefault();if(!requireLogin())return;const status=$('#uploadStatus');status.textContent='Mengunggah...';const form=new FormData(e.target);try{await api('/api/videos',{method:'POST',body:form});status.textContent='Upload berhasil!';e.target.reset();showPage('home')}catch(err){status.textContent=err.message}});
+$('#authForm').addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(e.target);try{const user=await api('/api/'+authMode,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:f.get('username'),password:f.get('password')})});me=user.user;updateUser();closeAuth();if(me.role==='admin')$('#adminLink').hidden=false;showPage('home')}catch(err){$('#authError').textContent=err.message}});
+$('#closeAuth').addEventListener('click',closeAuth);$('#loginTab').addEventListener('click',()=>showAuth('login'));$('#registerTab').addEventListener('click',()=>showAuth('register'));
+async function loadHistory(){try{renderGrid($('#historyGrid'),await api('/api/history'))}catch(e){$('#historyGrid').innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
+$('#playlistForm').addEventListener('submit',async e=>{e.preventDefault();try{await api('/api/playlists',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:new FormData(e.target).get('name')})});e.target.reset();loadPlaylists()}catch(err){notice(err.message)}});
+async function loadPlaylists(){try{const lists=await api('/api/playlists');$('#playlistList').innerHTML=lists.length?lists.map(p=>`<div class="panel"><h2>${esc(p.name)}</h2><div class="meta">ID playlist: ${p.id} · ${p.videos.length} video</div><div class="video-grid" style="margin-top:12px">${p.videos.map(card).join('')||'<p class="meta">Playlist ini masih kosong.</p>'}</div></div>`).join(''):'<div class="empty">Belum ada playlist. Buat playlist di atas atau tambahkan video dari halaman tontonan.</div>'}catch(e){$('#playlistList').innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
+async function loadStreams(){try{streams=await api('/api/streams');$('#streamList').innerHTML=streams.length?streams.map(s=>`<div class="panel row"><div style="flex:1"><span class="live-label">LIVE</span> <b>${esc(s.title)}</b><div class="meta">Oleh ${esc(s.username)} · ID live ${s.id}</div></div><button class="btn primary" onclick="joinStream(${s.id},'${esc(s.title).replace(/'/g,"\\'")}')">Tonton live</button></div>`).join(''):'<div class="empty">Belum ada siaran langsung. Kamu bisa memulai live di atas.</div>'}catch(e){$('#streamList').innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
+$('#refreshStreams').addEventListener('click',loadStreams);
+$('#liveForm').addEventListener('submit',async e=>{e.preventDefault();if(!requireLogin())return;try{const title=new FormData(e.target).get('title');const r=await api('/api/streams',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title})});activeStreamId=r.id;localStream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});$('#localVideo').srcObject=localStream;$('#broadcasterBox').classList.remove('hidden');$('#liveStatus').textContent='Siaran aktif · ID '+activeStreamId;setupBroadcaster(activeStreamId);e.target.reset();loadStreams()}catch(err){if(activeStreamId){try{await api(`/api/streams/${activeStreamId}/stop`,{method:'POST'})}catch{}}activeStreamId=null;notice('Tidak dapat memulai live: '+err.message+'. Pastikan izin kamera/mikrofon diberikan dan situs dibuka melalui localhost atau HTTPS.')}});
+function connectSocket(){if(!socket)socket=io();return socket}
+function setupBroadcaster(id){
+ const s=connectSocket();s.emit('join-stream',{streamId:id,role:'broadcaster'});
+ s.off('viewer-joined');s.on('viewer-joined',async({viewerId})=>{
+  if(!localStream)return;
+  const pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});peerConnections.set(viewerId,pc);
+  localStream.getTracks().forEach(t=>pc.addTrack(t,localStream));
+  pc.onicecandidate=e=>{if(e.candidate)s.emit('webrtc-ice',{to:viewerId,candidate:e.candidate})};
+  const offer=await pc.createOffer();await pc.setLocalDescription(offer);s.emit('webrtc-offer',{to:viewerId,offer});
+ });
+ s.off('webrtc-answer');s.on('webrtc-answer',async({from,answer})=>{const pc=peerConnections.get(from);if(pc)await pc.setRemoteDescription(answer)});
+ s.off('webrtc-ice');s.on('webrtc-ice',async({from,candidate})=>{const pc=peerConnections.get(from);if(pc&&candidate)try{await pc.addIceCandidate(candidate)}catch{}});
+ s.off('peer-left');s.on('peer-left',({id:peerId})=>{peerConnections.get(peerId)?.close();peerConnections.delete(peerId)});
+}
+async function joinStream(id,title){
+ if(!requireLogin())return;
+ try{
+  if(viewerPeer){viewerPeer.close();viewerPeer=null}
+  $('#viewerBox').classList.remove('hidden');$('#viewerTitle').textContent=title;$('#viewerStatus').textContent='Menghubungkan ke siaran...';$('#remoteVideo').srcObject=null;
+  const s=connectSocket();s.emit('join-stream',{streamId:id,role:'viewer'});
+  s.off('webrtc-offer');s.on('webrtc-offer',async({from,offer})=>{
+   if(viewerPeer)viewerPeer.close();
+   viewerPeer=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});
+   viewerPeer.ontrack=e=>{$('#remoteVideo').srcObject=e.streams[0];$('#viewerStatus').textContent='Terhubung ke live streaming.'};
+   viewerPeer.onicecandidate=e=>{if(e.candidate)s.emit('webrtc-ice',{to:from,candidate:e.candidate})};
+   await viewerPeer.setRemoteDescription(offer);const answer=await viewerPeer.createAnswer();await viewerPeer.setLocalDescription(answer);s.emit('webrtc-answer',{to:from,answer});
+  });
+  s.off('webrtc-ice');s.on('webrtc-ice',async({candidate})=>{if(viewerPeer&&candidate)try{await viewerPeer.addIceCandidate(candidate)}catch{}});
+  s.off('stream-ended');s.on('stream-ended',()=>{$('#viewerStatus').textContent='Siaran telah berakhir.';$('#remoteVideo').srcObject=null});
+  s.off('broadcaster-left');s.on('broadcaster-left',()=>{$('#viewerStatus').textContent='Penyiar terputus.'});
+  s.off('stream-error');s.on('stream-error',msg=>$('#viewerStatus').textContent=msg);
+ }catch(e){notice(e.message)}
+}
+async function stopLocalStream(sendStop=true){
+ if(localStream){localStream.getTracks().forEach(t=>t.stop());localStream=null}
+ peerConnections.forEach(pc=>pc.close());peerConnections.clear();
+ if(sendStop&&activeStreamId){try{await api(`/api/streams/${activeStreamId}/stop`,{method:'POST'})}catch{}}
+ activeStreamId=null;
+ if($('#localVideo'))$('#localVideo').srcObject=null;
+ if($('#broadcasterBox'))$('#broadcasterBox').classList.add('hidden');
+ if(socket)socket.disconnect();socket=null;
+}
+$('#stopLive').addEventListener('click',async()=>{await stopLocalStream(true);loadStreams()});
+async function loadAdmin(){
+ if(!me||me.role!=='admin')return;
+ try{
+ const [stats,users]=await Promise.all([api('/api/admin/stats'),api('/api/admin/users')]);
+ $('#adminContent').innerHTML=`<div class="stats"><div class="stat">Pengguna<b>${stats.users}</b></div><div class="stat">Video<b>${stats.videos}</b></div><div class="stat">Komentar<b>${stats.comments}</b></div><div class="stat">Live aktif<b>${stats.live}</b></div></div><div class="panel" style="margin-top:14px"><h2>Kelola video</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Judul</th><th>Pengunggah</th><th>Tayangan</th><th>Aksi</th></tr></thead><tbody>${stats.recent.map(v=>`<tr><td>${v.id}</td><td>${esc(v.title)}</td><td>${esc(v.username)}</td><td>${v.views}</td><td><button class="btn danger" onclick="deleteVideo(${v.id})">Hapus</button></td></tr>`).join('')||'<tr><td colspan="5">Belum ada video.</td></tr>'}</tbody></table></div></div><div class="panel"><h2>Kelola pengguna</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Username</th><th>Role</th><th>Terdaftar</th><th>Aksi</th></tr></thead><tbody>${users.map(u=>`<tr><td>${u.id}</td><td>${esc(u.username)}</td><td>${esc(u.role)}</td><td>${esc(u.created_at)}</td><td>${u.id===me.id?'—':`<button class="btn danger" onclick="deleteUser(${u.id},'${esc(u.username)}')">Hapus</button>`}</td></tr>`).join('')}</tbody></table></div></div>`;
+ }catch(e){$('#adminContent').innerHTML=`<div class="empty">${esc(e.message)}</div>`}
+}
+async function deleteVideo(id){if(!confirm('Hapus video ini beserta komentar dan likes?'))return;try{await api('/api/admin/videos/'+id,{method:'DELETE'});loadAdmin()}catch(e){notice(e.message)}}
+async function deleteUser(id,name){if(!confirm(`Hapus pengguna ${name} dan data terkait?`))return;try{await api('/api/admin/users/'+id,{method:'DELETE'});loadAdmin()}catch(e){notice(e.message)}}
+$('#refreshAdmin').addEventListener('click',loadAdmin);
+(async()=>{try{const r=await api('/api/me');me=r.user;updateUser();loadVideos()}catch(e){loadVideos()}})();
+</script>
+</body>
+</html>
