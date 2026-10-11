@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlayTube — Video untuk Semua</title>
+<style>
+:root{--bg:#0f0f0f;--panel:#181818;--panel2:#272727;--text:#f1f1f1;--muted:#aaa;--accent:#ff3030;--line:#303030}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 Arial,Helvetica,sans-serif}
+button,input{font:inherit}button{cursor:pointer;color:inherit;border:0}
+.topbar{height:64px;position:fixed;inset:0 0 auto;z-index:10;display:flex;align-items:center;gap:22px;padding:0 22px;background:rgba(15,15,15,.97);border-bottom:1px solid #222}
+.brand{display:flex;align-items:center;gap:9px;min-width:190px;font-size:21px;font-weight:800;letter-spacing:-.8px}.logo{width:34px;height:24px;background:var(--accent);border-radius:8px;display:grid;place-items:center}.logo:after{content:"";border-left:10px solid white;border-top:6px solid transparent;border-bottom:6px solid transparent;margin-left:3px}
+.searchbar{display:flex;max-width:650px;flex:1;margin:auto}.searchbar input{width:100%;min-width:0;background:#121212;color:white;border:1px solid #333;border-radius:24px 0 0 24px;padding:12px 18px;outline:none}.searchbar input:focus{border-color:#3b67a5}.searchbar button{width:65px;background:#272727;border:1px solid #333;border-left:0;border-radius:0 24px 24px 0;font-size:18px}
+.top-actions{display:flex;align-items:center;gap:10px}.round{background:transparent;border-radius:50%;width:40px;height:40px;font-size:20px}.round:hover,.icon-btn:hover{background:#292929}.avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#5e35b1;font-weight:bold}
+.sidebar{position:fixed;top:64px;bottom:0;left:0;width:225px;padding:14px 12px;overflow:auto;background:var(--bg)}.nav-item{display:flex;align-items:center;gap:22px;padding:12px 14px;border-radius:10px;color:#eee;text-decoration:none;margin-bottom:3px}.nav-item span:first-child{font-size:20px;width:22px;text-align:center}.nav-item:hover,.nav-item.active{background:#272727}.nav-item.active{font-weight:bold}.nav-sep{height:1px;background:#333;margin:14px 0}.nav-heading{padding:8px 14px;font-weight:bold;font-size:15px}
+main{margin-left:225px;padding:84px 28px 35px}.chips{display:flex;gap:10px;overflow-x:auto;padding:0 0 22px;position:sticky;top:64px;background:var(--bg);z-index:5}.chip{white-space:nowrap;background:#272727;border-radius:8px;padding:9px 13px}.chip.active,.chip:hover{background:#f1f1f1;color:#111}
+.video-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px 18px}.video-card{min-width:0;cursor:pointer}.thumb{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;background:#272727;display:block;transition:border-radius .15s}.video-card:hover .thumb{border-radius:5px}.video-info{display:flex;gap:12px;padding-top:12px}.channel-avatar{width:38px;height:38px;flex:0 0 38px;border-radius:50%;display:grid;place-items:center;font-weight:bold;color:white;background:var(--color,#456)}.video-title{font-size:15px;font-weight:700;line-height:1.4;margin:0 0 7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.meta{color:var(--muted);font-size:13px}.more{margin-left:auto;background:transparent;font-size:19px;align-self:flex-start}
+.empty{display:none;text-align:center;padding:70px 20px;color:var(--muted);grid-column:1/-1}.empty strong{display:block;color:white;font-size:20px;margin-bottom:8px}
+.modal{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:20px}.modal.open{display:flex}.player-box{width:min(950px,100%);background:#181818;border-radius:14px;overflow:hidden}.player-head{display:flex;justify-content:space-between;align-items:center;padding:12px 18px}.player-head button{background:transparent;font-size:26px}.player{aspect-ratio:16/9;background:#000}.player iframe{width:100%;height:100%;border:0}.player-details{padding:16px 20px 20px}.player-details h2{font-size:20px;margin:0 0 8px}.player-details p{color:var(--muted);margin:0}
+footer{color:#777;text-align:center;padding:35px 0 10px}
+@media(max-width:1200px){.video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar{width:200px}main{margin-left:200px;padding-left:22px;padding-right:22px}.brand{min-width:160px}}
+@media(max-width:760px){.topbar{padding:0 12px;gap:10px;height:58px}.brand{min-width:0;font-size:0}.brand .logo{flex-shrink:0}.searchbar{margin-left:auto}.searchbar input{padding:10px 12px}.searchbar button{width:45px}.top-actions .hide-mobile{display:none}.sidebar{top:auto;bottom:0;right:0;width:auto;height:62px;display:flex;justify-content:space-around;padding:5px 4px;background:#111;border-top:1px solid #333;overflow:visible;z-index:15}.sidebar .nav-item{flex:1;display:flex;flex-direction:column;justify-content:center;gap:2px;margin:0;padding:4px 2px;font-size:10px}.nav-item span:first-child{font-size:19px}.sidebar .nav-sep,.sidebar .nav-heading,.sidebar .extra{display:none}main{margin:0;padding:76px 13px 85px}.chips{top:58px;padding-bottom:16px}.video-grid{grid-template-columns:1fr;gap:26px}.video-info{padding-top:10px}.thumb{border-radius:9px}.top-actions{gap:2px}.avatar{width:30px;height:30px}}
+@media(min-width:761px) and (max-width:950px){.video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar{width:76px}.sidebar .nav-item{flex-direction:column;gap:5px;padding:12px 3px;font-size:10px}.sidebar .nav-item span:first-child{font-size:20px}.sidebar .nav-heading,.sidebar .nav-sep,.sidebar .extra{display:none}main{margin-left:76px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo"></span><span>PlayTube</span></div>
+  <form class="searchbar" id="searchForm"><input id="searchInput" type="search" placeholder="Cari video..." aria-label="Cari video"><button aria-label="Cari">⌕</button></form>
+  <div class="top-actions"><button class="round hide-mobile" title="Buat video" onclick="alert('Fitur unggah video bisa ditambahkan dengan backend.')">＋</button><button class="round hide-mobile" title="Notifikasi">♧</button><div class="avatar" title="Profil">P</div></div>
+</header>
+<aside class="sidebar">
+  <a class="nav-item active" href="#" data-nav="Beranda"><span>⌂</span><span>Beranda</span></a>
+  <a class="nav-item" href="#" data-nav="Shorts"><span>ϟ</span><span>Shorts</span></a>
+  <a class="nav-item" href="#" data-nav="Subscription"><span>▣</span><span>Subscription</span></a>
+  <div class="nav-sep"></div><div class="nav-heading extra">Kamu　›</div>
+  <a class="nav-item extra" href="#" data-nav="Riwayat"><span>◷</span><span>Riwayat</span></a>
+  <a class="nav-item extra" href="#" data-nav="Playlist"><span>☷</span><span>Playlist</span></a>
+  <a class="nav-item extra" href="#" data-nav="Video Anda"><span>▻</span><span>Video Anda</span></a>
+  <div class="nav-sep"></div><div class="nav-heading extra">Jelajahi</div>
+  <a class="nav-item extra" href="#" data-nav="Musik"><span>♫</span><span>Musik</span></a>
+  <a class="nav-item extra" href="#" data-nav="Gaming"><span>♧</span><span>Gaming</span></a>
+  <a class="nav-item extra" href="#" data-nav="Berita"><span>▤</span><span>Berita</span></a>
+  <a class="nav-item extra" href="#" data-nav="Olahraga"><span>⚽</span><span>Olahraga</span></a>
+</aside>
+<main>
+  <div class="chips" id="chips">
+    <button class="chip active" data-category="Semua">Semua</button><button class="chip" data-category="Musik">Musik</button><button class="chip" data-category="Gaming">Gaming</button><button class="chip" data-category="Pemrograman">Pemrograman</button><button class="chip" data-category="Komedi">Komedi</button><button class="chip" data-category="Teknologi">Teknologi</button><button class="chip" data-category="Edukasi">Edukasi</button><button class="chip" data-category="Animasi">Animasi</button><button class="chip" data-category="Olahraga">Olahraga</button>
+  </div>
+  <section class="video-grid" id="videoGrid" aria-label="Daftar video"></section>
+  <footer>PlayTube — contoh tampilan website video • Dibuat dengan HTML, CSS, dan JavaScript</footer>
+</main>
+<div class="modal" id="videoModal" role="dialog" aria-modal="true" aria-label="Pemutar video">
+  <div class="player-box"><div class="player-head"><strong>PlayTube · Sedang diputar</strong><button id="closeModal" aria-label="Tutup">×</button></div><div class="player"><iframe id="videoFrame" src="" title="Pemutar video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div><div class="player-details"><h2 id="modalTitle"></h2><p id="modalMeta"></p></div></div>
+</div>
+<script>
+const videos = [
+ {title:"Belajar HTML & CSS dari Nol — Tutorial untuk Pemula",channel:"Ngoding Santai",views:"125 rb tayangan",age:"2 hari lalu",category:"Pemrograman",duration:"18:42",id:"UB1O30fR-EE",color:"#277da1",thumb:"https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80"},
+ {title:"Playlist Musik Santai untuk Fokus Belajar dan Bekerja",channel:"Ruang Musik",views:"1,2 jt tayangan",age:"1 minggu lalu",category:"Musik",duration:"1:02:14",id:"jfKfPfyJRdk",color:"#9b5de5",thumb:"https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=800&q=80"},
+ {title:"Membangun Setup Gaming Impian dengan Budget Terbatas",channel:"Zona Gaming",views:"87 rb tayangan",age:"3 hari lalu",category:"Gaming",duration:"14:08",id:"L2w8v3W2G8E",color:"#f15bb5",thumb:"https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=800&q=80"},
+ {title:"Fakta Teknologi yang Akan Mengubah Masa Depan Kita",channel:"Tech Hari Ini",views:"340 rb tayangan",age:"5 hari lalu",category:"Teknologi",duration:"12:35",id:"",color:"#00b4d8",thumb:"https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80"},
+ {title:"Pemandangan Alam yang Menenangkan — Perjalanan ke Pegunungan",channel:"Jalan-Jalan Yuk",views:"560 rb tayangan",age:"2 minggu lalu",category:"Edukasi",duration:"22:10",id:"",color:"#43aa8b",thumb:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80"},
+ {title:"Cara Membuat Animasi Keren untuk Video Pertamamu",channel:"Kreatif Digital",views:"63 rb tayangan",age:"6 hari lalu",category:"Animasi",duration:"16:51",id:"",color:"#f8961e",thumb:"https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80"},
+ {title:"Highlight Pertandingan dan Momen Olahraga Terbaik",channel:"Arena Sport",views:"210 rb tayangan",age:"1 hari lalu",category:"Olahraga",duration:"9:17",id:"",color:"#90be6d",thumb:"https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80"},
+ {title:"Kompilasi Momen Lucu yang Bikin Ketawa",channel:"Ketawa Dulu",views:"2,1 jt tayangan",age:"4 hari lalu",category:"Komedi",duration:"10:03",id:"",color:"#f94144",thumb:"https://images.unsplash.com/photo-1527224857830-43a7acc85260?auto=format&fit=crop&w=800&q=80"},
+ {title:"JavaScript untuk Pemula: Bikin Website Jadi Interaktif",channel:"Ngoding Santai",views:"98 rb tayangan",age:"8 hari lalu",category:"Pemrograman",duration:"25:19",id:"W6NZfCO5SIk",color:"#277da1",thumb:"https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80"},
+ {title:"Review Game Terbaru: Grafik, Gameplay, dan Keseruannya",channel:"Zona Gaming",views:"154 rb tayangan",age:"12 jam lalu",category:"Gaming",duration:"20:44",id:"",color:"#f15bb5",thumb:"https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80"},
+ {title:"Belajar Sains dengan Eksperimen Sederhana di Rumah",channel:"Pintar Bareng",views:"76 rb tayangan",age:"9 hari lalu",category:"Edukasi",duration:"11:28",id:"",color:"#43aa8b",thumb:"https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80"},
+ {title:"Musik Akustik untuk Menemani Waktu Santai",channel:"Ruang Musik",views:"420 rb tayangan",age:"3 minggu lalu",category:"Musik",duration:"34:16",id:"",color:"#9b5de5",thumb:"https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&w=800&q=80"}
+];
+const grid=document.getElementById('videoGrid'), search=document.getElementById('searchInput');
+let category='Semua';
+function render(){
+ const q=search.value.trim().toLowerCase();
+ const list=videos.filter(v=>(category==='Semua'||v.category===category)&&[v.title,v.channel,v.category].some(s=>s.toLowerCase().includes(q)));
+ grid.innerHTML='';
+ if(!list.length){grid.innerHTML='<div class="empty" style="display:block"><strong>Video tidak ditemukan</strong>Coba kata kunci atau kategori lain.</div>';return}
+ list.forEach(v=>{
+  const card=document.createElement('article');card.className='video-card';card.tabIndex=0;
+  card.innerHTML=`<img class="thumb" src="${v.thumb}" alt="" loading="lazy"><div class="video-info"><div class="channel-avatar" style="--color:${v.color}">${v.channel.charAt(0)}</div><div style="min-width:0;flex:1"><h2 class="video-title"></h2><div class="meta"></div><div class="meta"></div></div><button class="more" aria-label="Opsi video">⋮</button></div>`;
+  card.querySelector('.video-title').textContent=v.title;
+  const metas=card.querySelectorAll('.meta');metas[0].textContent=v.channel;metas[1].textContent=`${v.views} • ${v.age}`;
+  card.addEventListener('click',e=>{if(e.target.closest('.more')){e.stopPropagation();alert('Menu opsi video — fitur ini bisa dikembangkan.');return}openVideo(v)});
+  card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openVideo(v)}});
+  grid.appendChild(card);
+ });
+}
+function openVideo(v){
+ document.getElementById('modalTitle').textContent=v.title;
+ document.getElementById('modalMeta').textContent=`${v.channel} • ${v.views} • ${v.category}`;
+ document.getElementById('videoFrame').src=v.id?`https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1`:'';
+ document.getElementById('videoModal').classList.add('open');
+}
+function closeVideo(){document.getElementById('videoModal').classList.remove('open');document.getElementById('videoFrame').src=''}
+document.getElementById('closeModal').addEventListener('click',closeVideo);
+document.getElementById('videoModal').addEventListener('click',e=>{if(e.target.id==='videoModal')closeVideo()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeVideo()});
+document.getElementById('searchForm').addEventListener('submit',e=>{e.preventDefault();render()});
+search.addEventListener('input',render);
+document.getElementById('chips').addEventListener('click',e=>{const b=e.target.closest('[data-category]');if(!b)return;category=b.dataset.category;document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x===b));render()});
+document.querySelector('.sidebar').addEventListener('click',e=>{const a=e.target.closest('[data-nav]');if(!a)return;e.preventDefault();document.querySelectorAll('.nav-item').forEach(x=>x.classList.toggle('active',x===a));if(a.dataset.nav==='Beranda'){category='Semua';search.value='';document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x.dataset.category==='Semua'));render()}else if(a.dataset.nav==='Musik'||a.dataset.nav==='Gaming'){category=a.dataset.nav;document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x.dataset.category===category));render()}else{alert('Menu '+a.dataset.nav+' masih berupa contoh tampilan.');}});
+render();
+</script>
+</body>
+</html>
